@@ -34,6 +34,10 @@ RUN \
   apt-get install -y libmysqlclient-dev tzdata python3 python3-dev python3-pip && \
   pip config set global.index-url "https://pypi.tuna.tsinghua.edu.cn/simple"
 
+# MCDReforged安装
+RUN \
+  pip3 install mcdreforged -i https://pypi.tuna.tsinghua.edu.cn/simple
+
 # 清除构建缓存
 RUN \
   apt-get clean && \
