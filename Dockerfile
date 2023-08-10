@@ -1,5 +1,5 @@
 FROM ubuntu:22.04
-MAINTAINER wwxiaoqi
+LABEL MAINTAINER wwxiaoqi
 
 # ZULU8版本（https://www.azul.com/downloads）
 ENV ZULU8='zulu8.72.0.17-ca-jdk8.0.382-linux_x64'
