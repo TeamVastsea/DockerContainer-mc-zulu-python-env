@@ -1,4 +1,4 @@
-IMAGE_NAME=test-container
+IMAGE_NAME=mc-zulu8-python3-env
 IMAGE_VERSION=v0.1
 
 build:
