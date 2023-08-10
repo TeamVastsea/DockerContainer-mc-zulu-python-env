@@ -1,42 +1,37 @@
 name: Docker Image CI
 
 on:
-  workflow_dispatch:
   push:
-    branches: main
-    tags: v*
-  pull_request:
-    branches: main
+    branches: [main]
+  release:
+    types: [created]
 
 jobs:
-  login:
+  build_docker:
+    name: Build docker
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the code
+      - name: Checkout
         uses: actions/checkout@v3
-        
-      - name: Login to Docker Hub
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
-      - name: Set Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: |
-            vastsea/mc-zulu8-python3-env
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-          
-      - name: Push to Docker Hub
+
+      - name: Build and push
+        id: docker_build
         uses: docker/build-push-action@v4
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/mc-zulu8-python3-env:${{ github.ref_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/mc-zulu8-python3-env:latest
