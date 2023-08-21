@@ -1,5 +1,5 @@
 FROM ubuntu:22.04
-LABEL MAINTAINER wwxiaoqi
+LABEL MAINTAINER = wwxiaoqi
 
 # ZULU8版本（https://www.azul.com/downloads）
 ENV ZULU8='zulu8.72.0.17-ca-jdk8.0.382-linux_x64'
@@ -23,11 +23,16 @@ RUN \
   mv ${ZULU8} /opt/jdk/${ZULU8} && \
   rm -rf ${ZULU8}.tar.gz && \
   echo 'export JAVA_HOME=/opt/jdk/${ZULU8}\n\
-export JRE_HOME=/opt/jdk/${ZULU8}/jre\n\
-export CLASSPATH=.:$JAVA_HOME/lib:/dt.jar:$JAVA_HOME/lib/tools.jar\n\
-PATH=$PATH:$JAVA_HOME/bin\n\
-ulimit -u 4096'\
+  export JRE_HOME=/opt/jdk/${ZULU8}/jre\n\
+  export CLASSPATH=.:$JAVA_HOME/lib:/dt.jar:$JAVA_HOME/lib/tools.jar\n\
+  PATH=$PATH:$JAVA_HOME/bin\n\
+  ulimit -u 4096'\
 >> ~/.bashrc
+
+ENV JAVA_HOME /opt/jdk/${ZULU8}
+ENV PATH $JAVA_HOME/bin:$PATH
+ENV LANG "en_US.UTF-8"
+ENV JAVA_VERSION ${ZULU8}
 
 # Python安装
 RUN \
